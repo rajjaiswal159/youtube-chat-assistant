@@ -6,16 +6,17 @@ from urllib.parse import urlparse, parse_qs
 
 
 # Extract video ID from a YouTube URL
+from urllib.parse import urlparse, parse_qs
+
 def extract_video_id(url):
 
     # Handle short youtu.be URLs
     if "youtu.be" in url:
-        return url.split("/")[-1]
+        return url.split("/")[-1].split("?")[0]
 
-    # Parse query parameters from URL
+    # Handle youtube.com URLs
     query_params = parse_qs(urlparse(url).query)
 
-    # Return video ID from 'v' parameter
     return query_params["v"][0]
 
 
@@ -29,7 +30,10 @@ def get_transcript(video_url):
     ytt_api = YouTubeTranscriptApi()
 
     # Fetch transcript data
-    transcript_data = ytt_api.fetch(video_id)
+    transcript_data = ytt_api.fetch(
+        video_id,
+        languages=["en", "hi"]
+    )
 
     # Combine transcript snippets into a single string
     transcript_text = " ".join(snippet.text for snippet in transcript_data)

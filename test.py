@@ -2,7 +2,7 @@
 from src.transcript import get_transcript
 
 # YouTube video URL
-url = "https://www.youtube.com/watch?v=aircAruvnKk"
+url = "https://youtu.be/tkZmtsNPdHc?si=3sD88cMRnJ5OY9dC"
 
 # Fetch transcript
 transcript = get_transcript(url)
