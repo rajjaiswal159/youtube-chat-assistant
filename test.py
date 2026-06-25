@@ -1,3 +1,11 @@
-from langchain_google_genai import ChatGoogleGenerativeAI
+# Import transcript function
+from src.transcript import get_transcript
 
-print("LangChain Installed Successfully!")
+# YouTube video URL
+url = "https://www.youtube.com/watch?v=aircAruvnKk"
+
+# Fetch transcript
+transcript = get_transcript(url)
+
+# Print first 1000 characters
+print(transcript[:1000])
