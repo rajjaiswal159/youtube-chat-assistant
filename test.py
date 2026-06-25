@@ -1,11 +1,21 @@
 # Import transcript function
 from src.transcript import get_transcript
 
-# YouTube video URL
-url = "https://youtu.be/tkZmtsNPdHc?si=3sD88cMRnJ5OY9dC"
+# Import text splitter function
+from src.text_splitter import split_text
 
-# Fetch transcript
+# YouTube URL
+url = "https://www.youtube.com/watch?v=aircAruvnKk"
+
+# Get transcript
 transcript = get_transcript(url)
 
-# Print first 1000 characters
-print(transcript[:1000])
+# Split transcript
+chunks = split_text(transcript)
+
+# Print total chunks
+print(f"Total Chunks: {len(chunks)}")
+
+# Print first chunk
+print("\nFirst Chunk:\n")
+print(chunks[0])
