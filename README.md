@@ -1,4 +1,4 @@
-# 🎥 YouTube Video Summarizer & Chat (RAG)
+# 🎥 YouTube RAG Chatbot
 
 A Retrieval-Augmented Generation (RAG) application built with **LangChain**, **Google Gemini**, **FAISS**, and **Streamlit** that allows users to chat with any YouTube video using its transcript.
 
