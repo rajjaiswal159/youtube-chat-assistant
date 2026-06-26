@@ -1,35 +1,27 @@
-# Import Gemini chat model
 from langchain_google_genai import ChatGoogleGenerativeAI
-
-# Import prompt template
 from langchain_core.prompts import ChatPromptTemplate
-
-# Import environment variable loader
-from dotenv import load_dotenv
-
-# Load .env variables
-load_dotenv()
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.runnables import RunnableLambda
 
 
-# Generate answer using retrieved context
-def ask_question(vector_store, question):
-
-    # Retrieve relevant chunks
-    retriever = vector_store.as_retriever(
-        search_kwargs={"k": 2}
-    )
-
-    docs = retriever.invoke(question)
-
-    # Combine retrieved chunks
-    context = "\n\n".join(
+# Convert documents into a single string
+def format_docs(docs):
+    return "\n\n".join(
         doc.page_content for doc in docs
     )
 
-    # Create prompt template
+def create_rag_chain(vector_store):
+
+    # Create retriever
+    retriever = vector_store.as_retriever(
+        search_kwargs={"k": 3}
+    )
+
+    # Prompt
     prompt = ChatPromptTemplate.from_template(
         """
-        Answer the question using ONLY the provided context.
+        Answer the question using only the context below.
 
         Context:
         {context}
@@ -37,26 +29,25 @@ def ask_question(vector_store, question):
         Question:
         {question}
 
-        If the answer is not present in the context,
+        If the answer is not in the context,
         say "I could not find that information in the video."
-
-        Answer:
         """
     )
 
-    # Initialize Gemini model
+    # LLM
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash"
     )
 
-    # Create final prompt
-    formatted_prompt = prompt.format(
-        context=context,
-        question=question
+    # LCEL Chain
+    chain = (
+        {
+            "context": retriever | RunnableLambda(format_docs),
+            "question": RunnablePassthrough()
+        }
+        | prompt
+        | llm
+        | StrOutputParser()
     )
 
-    # Generate response
-    response = llm.invoke(formatted_prompt)
-
-    # Return answer text
-    return response.content
+    return chain
