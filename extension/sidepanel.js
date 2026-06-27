@@ -3,10 +3,29 @@ const sendBtn = document.getElementById("sendBtn");
 const questionInput = document.getElementById("question");
 const result = document.getElementById("result");
 
+function addMessage(text, type) {
+
+    const div = document.createElement("div");
+
+    div.className = `message ${type}`;
+
+    div.innerHTML = text;
+
+    result.appendChild(div);
+
+    result.scrollTop = result.scrollHeight;
+
+    return div;
+}
+
 // Process Video
 processBtn.addEventListener("click", async () => {
 
-    result.innerHTML = "<p>Processing video...</p>";
+    result.innerHTML = "";
+
+    addMessage("📹 Processing video...", "ai");
+
+    processBtn.disabled = true;
 
     try {
 
@@ -31,13 +50,21 @@ processBtn.addEventListener("click", async () => {
 
         const data = await response.json();
 
-        result.innerHTML = `<p>${data.message}</p>`;
+        result.innerHTML = "";
+
+        addMessage(data.message, "ai");
+
+        processBtn.disabled = false;
 
     }
 
     catch (error) {
 
-        result.innerHTML = "<p>Failed to process video.</p>";
+        result.innerHTML = "";
+
+        addMessage("❌ Failed to process video.", "ai");
+
+        processBtn.disabled = false;
 
     }
 
@@ -47,15 +74,19 @@ processBtn.addEventListener("click", async () => {
 // Chat
 sendBtn.addEventListener("click", async () => {
 
+    if (sendBtn.disabled) return;
+
     const question = questionInput.value.trim();
 
     if (!question) return;
 
-    result.innerHTML += `<p><b>You:</b> ${question}</p>`;
+    addMessage(question, "user");
 
     questionInput.value = "";
 
-    result.innerHTML += `<p><b>AI:</b> Thinking...</p>`;
+    sendBtn.disabled = true;
+
+    const thinking = addMessage("🤖 Thinking...", "ai");
 
     try {
 
@@ -75,16 +106,29 @@ sendBtn.addEventListener("click", async () => {
 
         const data = await response.json();
 
-        result.lastElementChild.innerHTML =
-            `<b>AI:</b> ${data.answer}`;
+        thinking.innerHTML = data.answer;
+
+        sendBtn.disabled = false;
 
     }
 
     catch (error) {
 
-        result.lastElementChild.innerHTML =
-            "<b>AI:</b> Error occurred.";
+        thinking.innerHTML = "❌ Error occurred.";
 
+        sendBtn.disabled = false;
+
+    }
+
+});
+
+questionInput.addEventListener("keydown", (event) => {
+
+    if (event.key === "Enter" && !event.shiftKey) {
+
+        event.preventDefault();
+
+        sendBtn.click();
     }
 
 });

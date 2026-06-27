@@ -1,36 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>YouTube AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube AI Assistant</title>
 
     <link rel="stylesheet" href="sidepanel.css">
 </head>
 
 <body>
 
-    <button id="processBtn">
-        Process Video
-    </button>
+    <div class="container">
 
-    <br><br>
+        <header>
+            <h2>🤖 YouTube AI Assistant</h2>
+            <p>Chat with any YouTube video using AI</p>
+        </header>
 
-    <textarea
-        id="question"
-        rows="3"
-        placeholder="Ask a question..."
-    ></textarea>
+        <button id="processBtn" class="primary-btn">
+            📹 Process Video
+        </button>
 
-    <br><br>
+        <div class="chat-section">
 
-    <button id="sendBtn">
-        Send
-    </button>
+            <div id="result" class="chat-box">
+                <div class="welcome-message">
+                    Welcome! 👋<br><br>
+                    Click <b>Process Video</b> to load the transcript, then ask any question about the video.
+                </div>
+            </div>
 
-    <hr>
+            <textarea
+                id="question"
+                rows="3"
+                placeholder="Ask anything about this video..."
+            ></textarea>
 
-    <div id="result"></div>
+            <button id="sendBtn" class="primary-btn">
+                Send
+            </button>
+
+        </div>
+
+    </div>
 
     <script src="sidepanel.js"></script>
 
