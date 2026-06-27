@@ -1,0 +1,23 @@
+body{
+    font-family: Arial;
+    padding:15px;
+}
+
+input{
+
+    width:100%;
+    padding:10px;
+
+    margin-bottom:10px;
+}
+
+button{
+
+    width:100%;
+    padding:10px;
+}
+
+#answer{
+
+    margin-top:20px;
+}
