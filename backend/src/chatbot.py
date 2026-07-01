@@ -5,20 +5,21 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.runnables import RunnableLambda
 
 
-# Convert documents into a single string
+# Convert retrieved documents into a single string
 def format_docs(docs):
     return "\n\n".join(
         doc.page_content for doc in docs
     )
 
+# Create the RAG pipeline
 def create_rag_chain(vector_store):
 
-    # Create retriever
+    # Create a document retriever
     retriever = vector_store.as_retriever(
         search_kwargs={"k": 2}
     )
 
-    # Prompt
+    # Define the prompt template
     prompt = ChatPromptTemplate.from_messages(
     [
         (
@@ -49,12 +50,12 @@ def create_rag_chain(vector_store):
     ]
     )
 
-    # LLM
+    # Initialize the language model
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash"
     )
 
-    # LCEL Chain
+    # Build the LCEL RAG chain
     chain = (
         {
             "context": (
@@ -70,4 +71,5 @@ def create_rag_chain(vector_store):
         | StrOutputParser()
     )
 
+    # Return the completed RAG chain
     return chain
