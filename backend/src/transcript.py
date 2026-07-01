@@ -50,7 +50,8 @@ def get_transcript(video_id):
     
         # Return transcript text
         return transcript_text
-    
+
+    # Handle transcript-related errors
     except (NoTranscriptFound, TranscriptsDisabled):
         raise ValueError("Transcript is unavailable for this video.")
     
