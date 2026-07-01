@@ -1,8 +1,10 @@
+// DOM element references
 const processBtn = document.getElementById("processBtn");
 const sendBtn = document.getElementById("sendBtn");
 const questionInput = document.getElementById("question");
 const result = document.getElementById("result");
 
+// Add a chat message to the result area
 function addMessage(text, type) {
 
     const div = document.createElement("div");
@@ -18,7 +20,7 @@ function addMessage(text, type) {
     return div;
 }
 
-// Process Video
+// Handle video processing
 processBtn.addEventListener("click", async () => {
 
     result.innerHTML = "";
@@ -29,11 +31,13 @@ processBtn.addEventListener("click", async () => {
 
     try {
 
+        // Get the currently active browser tab
         const [tab] = await chrome.tabs.query({
             active: true,
             currentWindow: true
         });
 
+        // Send the video URL to the backend
         const response = await fetch("http://127.0.0.1:8000/process", {
 
             method: "POST",
@@ -58,6 +62,7 @@ processBtn.addEventListener("click", async () => {
 
     }
 
+    // Handle processing errors
     catch (error) {
 
         result.innerHTML = "";
@@ -71,7 +76,7 @@ processBtn.addEventListener("click", async () => {
 });
 
 
-// Chat
+// Handle chat requests
 sendBtn.addEventListener("click", async () => {
 
     if (sendBtn.disabled) return;
@@ -90,6 +95,7 @@ sendBtn.addEventListener("click", async () => {
 
     try {
 
+        // Send the user's question to the backend
         const response = await fetch("http://127.0.0.1:8000/chat", {
 
             method: "POST",
@@ -106,6 +112,7 @@ sendBtn.addEventListener("click", async () => {
 
         const data = await response.json();
 
+        // Display the AI response
         if (data.success) {
             thinking.innerHTML = data.answer;
         } else {
@@ -116,6 +123,7 @@ sendBtn.addEventListener("click", async () => {
 
     }
 
+    // Handle chat errors
     catch (error) {
 
         thinking.innerHTML = "❌ Error occurred.";
@@ -126,6 +134,7 @@ sendBtn.addEventListener("click", async () => {
 
 });
 
+// Send the message when Enter is pressed
 questionInput.addEventListener("keydown", (event) => {
 
     if (event.key === "Enter" && !event.shiftKey) {
